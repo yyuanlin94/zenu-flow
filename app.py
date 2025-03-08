@@ -17,3 +17,5 @@ def get_mindfulness(mood: str):
     exercise = random.choice(mindfulness_exercises.get(mood, ["Take a moment to breathe and center yourself."]))
     return {"mood": mood, "exercise": exercise}
 
+
+
