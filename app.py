@@ -12,10 +12,15 @@ mindfulness_exercises = {
                     "Stretch for a few minutes and roll your shoulders back."]
 }
 
+@app.get("/")
+def home():
+    return {"message": "ZenU Flow API is running!"}
+
 @app.get("/zenuflow")
 def get_mindfulness(mood: str):
     exercise = random.choice(mindfulness_exercises.get(mood, ["Take a moment to breathe and center yourself."]))
     return {"mood": mood, "exercise": exercise}
+
 
 
 
