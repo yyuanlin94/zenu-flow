@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wellness App UI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: #f8f9fa;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .app-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 20px;
+        }
+        
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            border: 1px solid #ddd;
+            border-radius: 36px;
+            overflow: hidden;
+            position: relative;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        /* Screen content styling */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #fcfcfc 0%, #f5f5f7 100%);
+            overflow: hidden;
+        }
+        
+        .gradient-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 126, 95, 0.08), rgba(254, 180, 123, 0.08));
+            z-index: 0;
+        }
+        
+        .screen-content {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Common components */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding: 20px 0 0;
+        }
+        
+        .page-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            filter: drop-shadow(0 8px 20px rgba(255, 126, 95, 0.15));
+            transform: translateY(-2px);
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #333;
+        }
+        
+        .card-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #FF7E5F, #FEB47B);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 126, 95, 0.2);
+        }
+        
+        .btn svg {
+            margin-right: 8px;
+        }
+        
+        /* Navigation */
+        .nav-bar {
+            display: flex;
+            justify-content: space-between;
+            background: white;
+            border-radius: 20px;
+            padding: 12px;
+            margin-top: auto;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+        
+        .nav-item.active {
+            color: #FF7E5F;
+        }
+        
+        .nav-item svg {
+            margin-bottom: 4px;
+        }
+        
+        .nav-label {
+            font-size: 12px;
+        }
+        
+        /* Mood tracker specific */
+        .mood-options {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+        
+        .mood-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .mood-emoji {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+        
+        .mood-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* Chart animation */
+        .chart-container {
+            height: 180px;
+            margin-bottom: 20px;
+        }
+        
+        .chart-line {
+            fill: none;
+            stroke: url(#gradient);
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: dash 2s ease-in-out forwards;
+        }
+        
+        @keyframes dash {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+        
+        .chart-dot {
+            fill: #FF7E5F;
+            r: 5;
+            opacity: 0;
+            animation: fade-in 0.3s ease-in-out forwards;
+            animation-delay: 2s;
+        }
+        
+        @keyframes fade-in {
+            to {
+                opacity: 1;
+            }
+        }
+        
+        /* Particles */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255, 126, 95, 0.5), rgba(254, 180, 123, 0.5));
+            filter: blur(8px);
+            opacity: 0.2;
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+            }
+            25% {
+                transform: translateY(-30px) translateX(30px);
+            }
+            50% {
+                transform: translateY(-10px) translateX(10px);
+            }
+            75% {
+                transform: translateY(20px) translateX(-20px);
+            }
+            100% {
+                transform: translateY(0) translateX(0);
+            }
+        }
+        
+        /* Tips section */
+        .tip-card {
+            background: linear-gradient(135deg, #f8f9fa, #fff);
+            border-left: 4px solid #FF7E5F;
+        }
+        
+        /* Dashboard stats */
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        
+        .stat-card {
+            width: 48%;
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            background: linear-gradient(135deg, #FF7E5F, #FEB47B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        /* Nutrition tracking */
+        .nutrition-bar {
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+        
+        .nutrition-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #FF7E5F, #FEB47B);
+            border-radius: 4px;
+            width: 65%;
+        }
+        
+        .nutrition-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        /* Daily affirmation */
+        .affirmation-card {
+            background: linear-gradient(135deg, #954ce9, #f55bc4);
+            padding: 20px;
+        }
+        
+        .affirmation-text {
+            color: white;
+            font-size: 18px;
+            font-style: italic;
+            text-align: center;
+            margin-bottom: 0;
+            font-family: 'Palatino', serif;
+        }
+        
+        /* Exercise tracker */
+        .exercise-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .exercise-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(255, 126, 95, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+        
+        .exercise-details {
+            flex: 1;
+        }
+        
+        .exercise-name {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .exercise-duration {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .exercise-progress {
+            width: 60px;
+            text-align: right;
+            font-weight: 600;
+            color: #954ce9;
+        }
+    </style>
+</head>
+<body>
+    <!-- SVG Icon System -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <defs>
+            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#FF7E5F" />
+                <stop offset="100%" stop-color="#FEB47B" />
+            </linearGradient>
+            
+            <symbol id="icon-home" viewBox="0 0 24 24">
+                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9 22V12h6v10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </symbol>
+            
+            <symbol id="icon-chart" viewBox="0 0 24 24">
+                <path d="M18 20V10M12 20V4M6 20v-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </symbol>
+            
+            <symbol id="icon-plus" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+                <path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </symbol>
+            
+            <symbol id="icon-nutrition" viewBox="0 0 24 24">
+                <path d="M18 8h1a4 4 0 010 8h-1M5 8h11v9a4 4 0 01-4 4H9a4 4 0 01-4-4V8z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 8V3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </symbol>
+            
+            <symbol id="icon-user" viewBox="0 0 24 24">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </symbol>
+            
+            <symbol id="icon-breathing" viewBox="0 0 24 24">
+                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" stroke="currentColor" stroke-width="2" fill="none"/>
+                <path d="M12 6v12M8 8l8 8M8 16l8-8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </symbol>
+            
+            <symbol id="icon-menu" viewBox="0 0 24 24">
+                <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+            </symbol>
+            
+            <symbol id="icon-bell" viewBox="0 0 24 24">
+                <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </symbol>
+        </defs>
+    </svg>
+
+    <!-- First row of app screens -->
+    <div class="app-row">
+        <!-- Screen 1: Dashboard -->
+        <div class="phone-frame">
+            <div class="screen">
+                <div class="gradient-bg"></div>
+                <div class="particles">
+                    <div class="particle" style="width: 40px; height: 40px; top: 10%; left: 20%; animation-delay: 0s;"></div>
+                    <div class="particle" style="width: 20px; height: 20px; top: 30%; left: 70%; animation-delay: 2s;"></div>
+                    <div class="particle" style="width: 30px; height: 30px; top: 70%; left: 30%; animation-delay: 5s;"></div>
+                </div>
+                <div class="screen-content">
+                    <div class="header" style="flex-direction: column; align-items: center; text-align: center;">
+                        <h1 style="font-size: 36px; font-weight: 700; background: linear-gradient(135deg, #FF7E5F, #FEB47B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px;">ZenU</h1>
+                        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                            <h2 class="page-title">Good Morning, Emma</h2>
+                            <svg width="24" height="24">
+                                <use xlink:href="#icon-bell"></use>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h2 class="card-title">Today's Mood</h2>
+                        <div class="mood-options">
+                            <div class="mood-option">
+                                <div class="mood-emoji">😢</div>
+                                <div class="mood-label">Sad</div>
+                            </div>
+                            <div class="mood-option">
+                                <div class="mood-emoji">😐</div>
+                                <div class="mood-label">Neutral</div>
+                            </div>
+                            <div class="mood-option">
+                                <div class="mood-emoji">🙂</div>
+                                <div class="mood-label">Good</div>
+                            </div>
+                            <div class="mood-option">
+                                <div class="mood-emoji">😊</div>
+                                <div class="mood-label">Happy</div>
+                            </div>
+                            <div class="mood-option">
+                                <div class="mood-emoji">🥰</div>
+                                <div class="mood-label">Excellent</div>
+                            </div>
+                        </div>
+                        <button class="btn">
+                            <svg width="16" height="16">
+                                <use xlink:href="#icon-plus"></use>
+                            </svg>
+                            Log Today
+                        </button>
+                    </div>
+                    
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <div class="stat-value">85%</div>
+                            <div class="stat-label">Weekly Progress</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">7</div>
+                            <div class="stat-label">Day Streak</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card affirmation-card">
+                        <div style="display: flex; align-items: center;">
+                            <div style="width: 40px; min-width: 40px; height: 40px; background: linear-gradient(135deg, #FF7E5F, #FEB47B); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" style="fill: none; stroke: white; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                                </svg>
+                            </div>
+                            <p class="affirmation-text">Every breath brings me peace and clarity.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h2 class="card-title">ZenU Daily Tip</h2>
+                        <p class="card-subtitle">Try taking 5 minutes to practice deep breathing before your morning meetings.</p>
+                        <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                            <button class="btn" style="padding: 8px 16px; font-size: 14px; background: rgba(255, 126, 95, 0.1); color: #FF7E5F; flex: 1; margin-right: 10px;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" style="margin-right: 6px;">
+                                    <path d="M5 12h14M12 5v14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                                </svg>
+                                New Tip
+                            </button>
+                            <button class="btn" style="padding: 8px 16px; font-size: 14px; flex: 1;">
+                                Try Now
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="nav-bar">
+                        <div class="nav-item active">
+                            <svg width="24" height="24">
+                                <use xlink:href="#icon-home"></use>
+                            </svg>
+                            <span class="nav-label">Home</span>
+                        </div>
+                        <div class="nav-item">
+                            <svg width="24" height="24">
+                                <use xlink:href="#icon-chart"></use>
+                            </svg>
+                            <span class="nav-label">Progress</span>
+                        </div>
+                        <div class="nav-item">
+                            <svg width="24" height="24">
+                                <use xlink:href="#icon-plus"></use>
+                            </svg>
+                            <span class="nav-label">Add</span>
+                        </div>
+                        <div class="nav-item">
+                            <svg width="24" height="24">
+                                <use xlink:href="#icon-nutrition"></use>
+                            </svg>
+                            <span class="nav-label">Nutrition</span>
+                        </div>
+                        <div class="nav-item">
+                            <svg width="24" height="24">
+                                <use xlink:href="#icon-user"></use>
+                            </svg>
+                            <span class="nav-label">Profile</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Screen 2: Mood Tracker -->
+        <div class="phone-frame">
+            <div class="screen">
+                <div class="gradient-bg"></div>
+                <div class="particles">
+                    <div class="particle" style="width: 30px; height: 30px; top: 20%; left: 60%; animation-delay: 1s;"></div>
+                    <div class="particle" style="width: 25px; height: 25px; top: 50%; left: 10%; animation-delay: 3s;"></div>
+                    <div class="particle" style="width: 35px; height: 35px; top: 80%; left: 70%; animation-delay: 6s;"></div>
+                </div>
+                <div class="screen-content">
+                    <div class="header" style="flex-direction: column; align-items: center; text-align: center;">
+                        <h1 style="font-size: 36px; font-weight: 700; background: linear-gradient(135deg, #FF7E5F, #FEB47B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px;">ZenU</h1>
+                        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                            <h2 class="page-title">Mood Tracker</h2>
+                            <svg width="24" height="24">
+                                <use xlink:href="#icon-menu"></use>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h2 class="card-title">Weekly Mood</h2>
+                        <div class="chart-container">
+                            <svg width="100%" height="100%" viewBox="0 0 300 150">
+                                <!-- X and Y axis -->
+                                <line x1="30" y1="120" x2="290" y2="120" stroke="#ddd" stroke-width="1" />
+                                <line x1="30" y1="20" x2="30" y2="120" stroke="#ddd" stroke-width="1" />
+                                
+                                <!-- X-axis labels -->
+                                <text x="50" y="135" font-size="10" text-anchor="middle">Mon</text>
+                                <text x="90" y="135" font-size="10" text-anchor="middle">Tue</text>
+                                <text x="130" y="135" font-size="10" text-anchor="middle">Wed</text>
+                                <text x="170" y="135" font-size="10" text-anchor="middle">Thu</text>
+                                <text x="210" y="135" font-size="10" text-anchor="middle">Fri</text>
+                                <text x="250" y="135" font-size="10" text-anchor="middle">Sat</text>
+                                <text x="290" y="135" font-size="10" text-anchor="middle">Sun</text>
+                                
+                                <!-- Y-axis labels -->
+                                <text x="20" y="120" font-size="10" text-anchor="end">0</text>
+                                <text x="20" y="90" font-size="10" text-anchor="end">25</text>
+                                <text x="20" y="60" font-size="10" text-anchor="end">50</text>
+                                <text x="20" y="30" font-size="10" text-anchor="end">75</text>
+                                
+                                <!-- Chart line -->
+                                <path class="chart-line" d="M50,100 Q70,60 90,80 T130,50 T170,70 T210,40 T250,60 T290,30" />
+                                
+                                <!-- Chart dots -->
+                                <circle class="chart-dot" cx="50" cy="100" />
+                                <circle class="chart-dot" cx="90" cy="80" />
+                                <circle class="chart-dot" cx="130" cy="50" />
+                                <circle class="chart-dot" cx="170" cy="70" />
+                                <circle class="chart-dot" cx="210" cy="40" />
+                                <circle class="chart-dot" cx="250" cy="60" />
+                                <circle class="chart-dot" cx="290" cy="30" />
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h2 class="card-title">Mood Factors</h2>
+                        <div class="card-subtitle">What affected your mood today?</div>
+                        
+                        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; margin-top: 20px;">
+                            <div style="width: 48%; position: relative; margin-bottom: 15px; cursor: pointer;">
+                                <input type="checkbox" id="factor-sleep" style="position: absolute; opacity: 0;" />
+                                <label for="factor-sleep" style="display: flex; flex-direction: column; align-items: center; padding: 15px 8px; background: rgba(255, 126, 95, 0.1); border-radius: 16px; transition: all 0.3s ease;">
+                                    <div style="font-size: 28px; margin-bottom: 8px;">😴</div>
+                                    <span style="font-size: 14px;">Sleep</span>
+                                </label>
+                            </div>
+                            
+                            <div style="width: 48%; position: relative; margin-bottom: 15px; cursor: pointer;">
+                                <input type="checkbox" id="factor-nutrition" style="position: absolute; opacity: 0;" checked />
+                                <label for="factor-nutrition" style="display: flex; flex-direction: column; align-items: center; padding: 15px 8px; background: linear-gradient(135deg, #FF7E5F, #FEB47B); color: white; border-radius: 16px; transition: all 0.3s ease;">
+                                    <div style="font-size: 28px; margin-bottom: 8px;">🥗</div>
+                                    <span style="font-size: 14px;">Nutrition</span>
+                                </label>
+                            </div>
+                            
+                            <div style="width: 48%; position: relative; margin-bottom: 15px; cursor: pointer;">
+                                <input type="checkbox" id="factor-exercise" style="position: absolute; opacity: 0;" />
+                                <label for="factor-exercise" style="display: flex; flex-direction: column; align-items: center; padding: 15px 8px; background: rgba(255, 126, 95, 0.1); border-radius: 16px; transition: all 0.3s ease;">
+                                    <div style="font-size: 28px; margin-bottom: 8px;">🏃‍♀️</div>
+                                    <span style="font-size: 14px;">Exercise</span>
+                                </label>
+                            </div>
+                            
+                            <div style="width: 48%; position: relative; margin-bottom: 15px; cursor: pointer;">
+                                <input type="checkbox" id="factor-social" style="position: absolute; opacity: 0;" />
+                                <label for="factor-social" style="display: flex; flex-direction: column; align-items: center; padding: 15px 8px; background: rgba(255, 126, 95, 0.1); border-radius: 16px; transition: all 0.3s ease;">
+                                    <div style="font-size: 28px; margin-bottom: 8px;">👥</div>
+                                    <span style="font-size: 14px;">Social</span>
+                                </label>
+                            </div>
+                            
+                            <div style="width: 48%; position: relative; margin-bottom: 15px; cursor: pointer;">
+                                <input type="checkbox" id="factor-work" style="position: absolute; opacity: 0;" checked />
+                                <label for="factor-work" style="display: flex; flex-direction: column; align-items: center; padding: 15px 8px; background: linear-gradient(135deg, #FF7E5F, #FEB47B); color: white; border-radius: 16px; transition: all 0.3s ease;">
+                                    <div style="font-size: 28px; margin-bottom: 8px;">💼</div>
+                                    <span style="font-size: 14px;">Work</span>
+                                </label>
+                            </div>
+                            
+                            <div style="width: 48%; position: relative; margin-bottom: 15px; cursor: pointer;">
+                                <input type="checkbox" id="factor-stress" style="position: absolute; opacity: 0;" />
+                                <label for="factor-stress" style="display: flex; flex-direction: column; align-items: center; padding: 15px 8px; background: rgba(255, 126, 95, 0.1); border-radius: 16px; transition: all 0.3s ease;">
+                                    <div style="font-size: 28px; margin-bottom: 8px;">🧠</div>
+                                    <span style="font-size: 14px;">Stress</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <style>
+                            input[type="checkbox"]:checked + label {
+                                background: linear-gradient(135deg, #FF7E5F, #FEB47B) !important;
+                                color: white !important;
+                                transform: translateY(-2px);
+                                box-shadow: 0 4px 10px rgba(255, 126, 95, 0.2);
+                            }
+                        </style>
+                    </div>
+                    
+                    <div class="card tip-card">
+                        <h2 class="card-title">ZenU AI Insight</h2>
+                        <p class="card-subtitle">Your mood tends to improve after meditation sessions. Consider adding more mindfulness practices to your routine.</p>
+                    </div>
+                    
+                    <div class="nav-bar">
+                        <div class="nav-item">
+                            <svg width="24" height="24">
+                                <use xlink:href="#icon-home"></use>
+                            </svg>
+                            <span class="nav-label">Home</span>
+                        </div>
+                        <div class="nav-item active">
+                            <svg width="24" height="24">
+                                <use xlink:href="#icon-chart"></use>
+                            </svg>
+                            <span class="nav-label">Progress</span>
+                        </div>
+                        <div class="nav-item">
+                            <svg width="24" height="24">
+                                <use xlink:href="#icon-plus"></use>
+                            </svg>
+                            <span class="nav-label">Add</span>
+                        </div>
+                        <div class="nav-item">
+                            <svg width="24" height="24">
+                                <use xlink:href="#icon-nutrition"></use>
+                            </svg>
+                            <span class="nav-label">Nutrition</span>
+                        </div>
+                        <div class="nav-item">
+                            <svg width="24" height="24">
+                                <use xlink:href="#icon-user"></use>
+                            </svg>
+                            <span class="nav-label">Profile</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Screen 3: Nutrition Tracker -->
+        <div class="phone-frame">
+            <div class="screen">
+                <div class="gradient-bg"></div>
+                <div class="particles">
+                    <div class="particle" style="width: 25px; height: 25px; top: 15%; left: 40%; animation-delay: 2s;"></div>
+                    <div class="particle" style="width: 35px; height: 35px; top: 40%; left: 80%; animation-delay: 4s;"></div>
+                    <div class="particle" style="width: 20px; height: 20px; top: 75%; left: 25%; animation-delay: 7s;"></div>
+                </div>
+                <div class="screen-content">
+                    <div class="header" style="flex-direction: column; align-items: center; text-align: center;">
+                        <h1 style="font-size: 36px; font-weight: 700; background: linear-gradient(135deg, #FF7E5F, #FEB47B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px;">ZenU</h1>
+                        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                            <h2 class="page-title">Nutrition</h2>
+                            <svg width="24" height="24">
+                                <use xlink:href="#icon-menu"></use>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h2 class="card-title">Today's Summary</h2>
+                        <div class="nutrition-label">
+                            <span>Calories</span>
+                            <span>1450 / 2200 kcal</span>
+                        </div>
+                        <div class="nutrition-bar">
+                            <div class="nutrition-progress" style="width: 65%;"></div>
+                        </div>
+                        
+                        <div class="nutrition-label">
+                            <span>Protein</span>
+                            <span>75 / 120 g</span>
+                        </div>
+                        <div class="nutrition-bar">
+                            <div class="nutrition-progress" style="width: 62%;"></div>
+                        </div>
+                        
+                        <div class="nutrition-label">
+                            <span>Carbs</span>
+                            <span>180 / 250 g</span>
+                        </div>
+                        <div class="nutrition-bar">
+                            <div class="nutrition-progress" style="width: 72%;"></div>
+                        </div>
+                        
+                        <div class="nutrition-label">
+                            <span>Fat</span>
+                            <span>40 / 70 g</span>
+                        </div>
+                        <div class="nutrition-bar">
+                            <div class="nutrition-progress" style="width: 57%;"></div>
+                        </div>
+                        
+                        <div class="nutrition-label">
+                            <span>Water</span>
+                            <span>1.2 / 2.5 L</span>
+                        </div>
+                        <div class="nutrition-bar">
+                            <div class="nutrition-progress" style="width: 48%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h2 class="card-title">Recent Meals</h2>
+                        <div style="display: flex; margin-bottom: 15px;">
+                            <button class="btn" style="padding: 8px 16px; font-size: 14px; width: 100%;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" style="margin-right: 6px;">
+                                    <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                                </svg>
+                                Add Meal
+                            </button>
+                        </div>
+                        <div class="meal-item" style="display: flex; align-items: center; padding: 12px; background: white; border-radius: 16px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                            <img src="/api/placeholder/60/60" alt="Breakfast" style="border-radius: 12px; margin-right: 12px; object-fit: cover;" />
+                            <div class="meal-details" style="flex: 1;">
+                                <div class="meal-name" style="font-weight: 600; margin-bottom: 2px;">Breakfast</div>
+                                <div class="meal-description" style="font-size: 13px; color: #666; margin-bottom: 2px;">Oatmeal with berries and nuts</div>
+                                <div class="meal-calories" style="font-size: 13px; color: #FF7E5F; font-weight: 500;">380 kcal</div>
+                            </div>
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" style="stroke: #666; margin-bottom: 4px;">
+                                    <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" transform="rotate(45, 12, 12)" />
+                                </svg>
+                                <span style="font-size: 10px; color: #666;">Edit</span>
+                            </div>
+                        </div>
+                        <div class="meal-item" style="display: flex; align-items: center; padding: 12px; background: white; border-radius: 16px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+                            <img src="/api/placeholder/60/60" alt="Lunch" style="border-radius: 12px; margin-right: 12px; object-fit: cover;" />
+                            <div class="meal-details" style="flex: 1;">
+                                <div class="meal-name" style="font-weight: 600; margin-bottom: 2px;">Lunch</div>
+                                <div class="meal-description" style="font-size: 13px; color: #666; margin-bottom: 2px;">Grilled chicken salad</div>
+                                <div class="meal-calories" style="font-size: 13px; color: #FF7E5F; font-weight: 500;">520 kcal</div>
+                            </div>
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <svg width="20" height="20" viewBox="0 0 24 24" style="stroke: #666; margin-bottom: 4px;">
+                                    <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" transform="rotate(45, 12, 12)" />
+                                </svg>
+                                <span style="font-size: 10px; color: #666;">Edit</span>
+                            </div>
+                        </div>
